@@ -70,6 +70,7 @@
             font-size: 18px;
             min-height: 30px;
             margin-top: 20px;
+            position: relative; /* necesario para moverlos */
             transition: all 0.3s ease;
         }
 
@@ -174,13 +175,13 @@
         const frases = [
             "Segura? ",
             "Piénsalo bien ",
-            "El botón de sí se ve mejor mi amor",
-            "Podría ser nuestro primer San Valentin juntos",
-            "No tienes tus lentes, verdad?",
-            "Si dices que si te doy un beso",
-			"Ya no te gusto?",
-			"Que grosera eres",
-			"ok, no me hables"
+            "El botón de sí se ve mejor mi amor ",
+            "Podría ser nuestro primer San Valentin juntos ",
+            "No tienes tus lentes, verdad? ",
+            "Si dices que si te doy un beso ",
+            "Ya no te gusto? ",
+            "Que grosera eres ",
+            "ok, no me hables "
         ];
 
         let contador = 0;
@@ -190,13 +191,14 @@
             escala += 0.2;
             btnSi.style.transform = `scale(${escala})`;
 
-            // MOVER EL BOTÓN NO SEGÚN EL ANCHO DE SÍ
             const anchoSi = btnSi.getBoundingClientRect().width;
-            btnNo.style.position = 'relative';
             btnNo.style.left = (anchoSi / 2) + 'px';
 
             mensajes.textContent = frases[contador % frases.length];
             contador++;
+
+            mensajes.style.top = (escala * 20) + 'px'; 
+            odio.style.top = (escala * 20) + 'px';
 
             if (clicksNo % 4 === 3) {
                 odio.style.display = "block";
@@ -217,5 +219,7 @@
 
 </body>
 </html>
+
+
 
 
