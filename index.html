@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Te amo Lu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(270deg, #7dd3fc, #38bdf8); 
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .contenedor {
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            padding: 20px;
+            max-width: 90vw;
+        }
+
+        h1 {
+            color: #0c4a6e; 
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.3);
+            font-size: 2.5rem;
+        }
+
+        .botones {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            font-size: 20px;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.3s ease, background-color 0.2s, left 0.3s ease;
+        }
+
+        #btnSi {
+            background-color: #ff4d6d;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 11;
+            white-space: nowrap;
+        }
+
+        #btnNo {
+            background-color: #f8fafc;
+            color: #475569;
+            position: relative;
+            z-index: 10;
+            left: 0;
+        }
+
+        #mensajes, #odio {
+            color: #0c4a6e;
+            font-weight: bold;
+            font-size: 18px;
+            min-height: 30px;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        #odio {
+            font-size: 16px;
+            display: none;
+            opacity: 0.9;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(12, 74, 110, 0.8);
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 400px;
+            font-size: 20px;
+            text-align: center;
+            color: #0c4a6e;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            border: 5px solid #7dd3fc;
+        }
+
+        .fotos {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .foto {
+            position: absolute;
+            width: 140px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            opacity: 1;
+            border: 5px solid white;
+        }
+
+        .f1 { top: 5%; left: 5%; transform: rotate(-8deg); }
+        .f2 { top: 15%; right: 5%; transform: rotate(5deg); }
+        .f3 { top: 45%; left: 3%; transform: rotate(-10deg); }
+        .f4 { top: 45%; right: 3%; transform: rotate(10deg); }
+        .f5 { bottom: 8%; left: 6%; transform: rotate(-5deg); }
+        .f6 { bottom: 3%; right: 20%; transform: rotate(12deg); }
+        .f7 { top: 4%; left: 50%; transform: translateX(-50%) rotate(-2deg); }
+        .f8 { bottom: 4%; left: 30%; transform: translateX(-50%) rotate(3deg); }
+    </style>
+</head>
+<body>
+
+    <div class="fotos">
+        <img src="fotos/foto1.jpeg" class="foto f1">
+        <img src="fotos/foto2.jpeg" class="foto f2">
+        <img src="fotos/foto3.jpeg" class="foto f3">
+        <img src="fotos/foto4.jpeg" class="foto f4">
+        <img src="fotos/foto5.jpeg" class="foto f5">
+        <img src="fotos/foto6.jpeg" class="foto f6">
+        <img src="fotos/foto7.jpeg" class="foto f7">
+        <img src="fotos/foto8.jpeg" class="foto f8">
+    </div>
+
+    <div class="contenedor">
+        <h1>¿Quieres ser mi San Valentín? ❣️</h1>
+
+        <div class="botones">
+            <button id="btnSi">Sí ✅</button>
+            <button id="btnNo">No 😐</button>
+        </div>
+
+        <div id="mensajes"></div>
+        <div id="odio">ok me odias</div>
+    </div>
+
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <p>
+                No importa la distancia, yo siempre querré pasar cualquier fecha contigo lu ❣️
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const btnSi = document.getElementById("btnSi");
+        const btnNo = document.getElementById("btnNo");
+        const mensajes = document.getElementById("mensajes");
+        const modal = document.getElementById("modal");
+        const odio = document.getElementById("odio");
+        const contenedor = document.querySelector('.contenedor');
+
+        let escala = 1;
+        let clicksNo = 0;
+
+        const frases = [
+            "¿Segura? 😏",
+            "Piénsalo bien 👀",
+            "El botón de sí se ve mejor 💕",
+            "Solo digo… podría ser un gran San Valentín 🌹",
+            "El universo insiste 🌌",
+            "Ya casi me convences de rendirme 😌"
+        ];
+
+        let contador = 0;
+
+        btnNo.addEventListener("click", () => {
+            clicksNo++;
+            escala += 0.2;
+            btnSi.style.transform = `scale(${escala})`;
+
+            // MOVER EL BOTÓN NO SEGÚN EL ANCHO DE SÍ
+            const anchoSi = btnSi.getBoundingClientRect().width;
+            btnNo.style.position = 'relative';
+            btnNo.style.left = (anchoSi / 2) + 'px';
+
+            mensajes.textContent = frases[contador % frases.length];
+            contador++;
+
+            if (clicksNo % 4 === 3) {
+                odio.style.display = "block";
+            } else if (clicksNo % 4 === 0) {
+                odio.style.display = "none";
+            }
+        });
+
+        btnSi.addEventListener("click", () => {
+            contenedor.style.display = 'none';
+            modal.style.display = "flex";
+        });
+
+        modal.addEventListener("click", () => {
+            location.reload();
+        });
+    </script>
+
+</body>
+</html>
